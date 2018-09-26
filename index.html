@@ -77,27 +77,62 @@
 		}
 	}
 	var a = new ImageDataURL([
+		'https://restapi.amap.com/v3/staticmap?location=121.60222,31.216436&zoom=14&scale=2&size=340*180&markers=mid,,A:121.60222,31.216436&key=2c162610490c86fa8ee9da087389fcaf',
 		'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3949025733,3026580881&fm=200&gp=0.jpg',
-		'https://restapi.amap.com/v3/staticmap?location=121.60222,31.216436&zoom=14&scale=2&size=335*180&markers=mid,,A:121.60222,31.216436&key=2c162610490c86fa8ee9da087389fcaf',
-		'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=85690711,3884201894&fm=26&gp=0.jpg'
+		'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=800794028,1707555707&fm=26&gp=0.jpg',
+		'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=85690711,3884201894&fm=26&gp=0.jpg',
+		'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3359905508,327083786&fm=26&gp=0.jpg'
 	]);
 	a.oncomplete = function () {
-		var imgs = new Array();
+		var imgs = [[],[]];
+		var dataArrary=[];
+		var imgsOne;
 		for (key in this.imgdata) {
-			if (this.imgdata[key] == this.emptyobj) {
-				imgs.push({
-					text: '请上传头像',
-					fontSize: 10,
-					rowSpan: 3
-				});
+			if(key==0){
+				imgsOne = this.imgdata[key];
 				continue;
-			} //不存在的圖片直接忽略
-			imgs.push({
-				image: this.imgdata[key],
-				fit: [100, 150],
-				rowSpan: 3
-			}); //在的圖片直接忽略
+			}
+
+			if(dataArrary[key%2]){
+				dataArrary[key%2].columns.push({
+					image: this.imgdata[key],
+					alignment: 'center',
+					margin: [0, 10, 0, 0],
+					width: 200,
+					height: 100
+				})
+			}else{
+				dataArrary.push({
+					columns: []
+				})
+			}
 		}
+		dataArrary.push({
+		// 	//  右侧描述信息
+			alignment: 'left',
+			fontSize: 16,
+			heights: 20,
+			margin: [0, 10, 0, 0],
+			ol: [
+				'测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档',
+			]
+		})
+// console.log(dataArrary)
+		// [{
+		// 	//  右侧图片信息
+		// 	columns: imgs[0]
+		// }, {
+		// 	columns: imgs[1]
+		// }, {
+		// 	//  右侧描述信息
+		// 	alignment: 'left',
+		// 	fontSize: 16,
+		// 	heights: 20,
+		// 	margin: [0, 10, 0, 0],
+		// 	ol: [
+		// 		'测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档',
+		// 	]
+		// }]
 		pdfMake.fonts = {
 			Roboto: {
 				normal: 'simfang.ttf',
@@ -120,7 +155,7 @@
 				columns: [{
 					columns: [{
 							alignment: 'left',
-							width: 335,
+							width: 340,
 							color: '#222',
 							table: {
 								widths: [85, '*'],
@@ -194,55 +229,17 @@
 									}],
 									[{
 										colSpan: 2,
-										image: imgs[1].image,
+										image: imgsOne,
 										alignment: 'center',
 										margin: [0, 10, 0, 0],
-										width: 335,
+										width: 340,
 										height: 180
 									}]
 								]
 							},
 							layout: 'headerLineOnly'
 						},
-						[{
-							//  右侧图片信息
-							columns: [{
-								image: imgs[0].image,
-								alignment: 'right',
-								margin: [0, 10, 0, 0],
-								width: 200,
-								height: 100
-							}, {
-								image: imgs[0].image,
-								alignment: 'right',
-								margin: [10, 10, 0, 0],
-								width: 200,
-								height: 100
-							}]
-						}, {
-							columns: [{
-								image: imgs[0].image,
-								alignment: 'right',
-								margin: [0, 10, 0, 0],
-								width: 200,
-								height: 100
-							}, {
-								image: imgs[0].image,
-								alignment: 'right',
-								margin: [10, 10, 0, 0],
-								width: 200,
-								height: 100
-							}]
-						}, {
-							//  右侧描述信息
-							alignment: 'left',
-							fontSize: 16,
-							heights: 20,
-							margin: [0, 10, 0, 0],
-							ol: [
-								'测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档',
-							]
-						}]
+						dataArrary
 					]
 				}]
 			}],
@@ -284,7 +281,7 @@
 			},
 			defaultStyle: {
 				alignment: 'right',
-				columnGap: 15
+				columnGap: 10
 			}
 		}
 
