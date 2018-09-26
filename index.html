@@ -106,11 +106,10 @@
 				bolditalics: 'simfang.ttf'
 			}
 		};
-		console.log(imgs)
 		var db = {
 			pageSize: 'A4', //默认情况下我们使用portrait或者自定义
 			pageOrientation: 'landscape', //你可以将它改为横向
-			pageMargins: [40, 20], // [左，上，右，下]或[水平，垂直]或只是一个数字为等于边距 
+			pageMargins: [40, 20], // [左，上，右，下]或[水平，垂直]或只是一个数字为等于边距
 			content: [{
 				text: '广告位信息',
 				fontSize: 26,
@@ -127,6 +126,7 @@
 								widths: [85, '*'],
 								// headerRows: 1, // 横线位置
 								// keepWithHeaderRows: 1,
+								// 表格数据
 								body: [
 									[{
 										margin: [5, 5],
@@ -202,33 +202,10 @@
 									}]
 								]
 							},
-// 							table: {
-// 								headerRows: 5,
-// 								widths: ['*'],
-// 								body: [
-// 									[{
-// 										text: 'Header 1',
-// 									}],
-// 									[{
-// 										text: 'Sample value 1Sample value 3',
-// 										fillColor: '#ffffff'
-// 									}],
-// 									[{
-// 										text: 'Sample value 1Sample value 3',
-// 										fillColor: '#cccccc'
-// 									}],
-// 									[{
-// 										image: imgs[1].image,
-// 										alignment: 'center',
-// 										margin: [0, 10, 0, 0],
-// 										width: 335,
-// 										height: 180
-// 									}]
-// 								]
-// 							},
 							layout: 'headerLineOnly'
 						},
 						[{
+							//  右侧图片信息
 							columns: [{
 								image: imgs[0].image,
 								alignment: 'right',
@@ -257,13 +234,13 @@
 								height: 100
 							}]
 						}, {
+							//  右侧描述信息
 							alignment: 'left',
-							fontSize: 20,
+							fontSize: 16,
+							heights: 20,
 							margin: [0, 10, 0, 0],
 							ol: [
-								'item 1',
-								'item 2',
-								'item 3'
+								'测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档',
 							]
 						}]
 					]
@@ -277,6 +254,7 @@
 			// 				margin: [ 10, 10, 0, 0 ]
 			// 			},
 			footer: {
+				// 底部logo图片信息
 				columns: [{
 						image: 'logo-left.png',
 						width: 100,
@@ -306,7 +284,7 @@
 			},
 			defaultStyle: {
 				alignment: 'right',
-				columnGap: 20
+				columnGap: 15
 			}
 		}
 
