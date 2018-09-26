@@ -29,7 +29,8 @@
 			var img = new Image();
 			var p = this;
 			img.src = url;
-			img.setAttribute('crossOrigin', 'anonymous');
+			// img.setAttribute('crossOrigin', 'anonymous');
+			img.crossOrigin = "*";
 			img.onload = function () {
 				var i;
 				var maxwidth = 500;
@@ -42,6 +43,7 @@
 					c.width = img.width;
 					c.height = img.height;
 				}
+				console.log(img.src)
 				ctx.drawImage(img, 0, 0, c.width, c.height);
 
 				p.imgdata[index] = c.toDataURL('image/jpeg', 1);
@@ -76,6 +78,7 @@
 	}
 	var a = new ImageDataURL([
 		'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3949025733,3026580881&fm=200&gp=0.jpg',
+		'https://restapi.amap.com/v3/staticmap?location=121.60222,31.216436&zoom=14&scale=2&size=335*180&markers=mid,,A:121.60222,31.216436&key=2c162610490c86fa8ee9da087389fcaf',
 		'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=85690711,3884201894&fm=26&gp=0.jpg'
 	]);
 	a.oncomplete = function () {
@@ -105,88 +108,201 @@
 		};
 		console.log(imgs)
 		var db = {
-			pageSize: 'A4',//默认情况下我们使用portrait或者自定义
-			pageOrientation:'landscape',//你可以将它改为横向
-			pageMargins: [ 40,20 ],// [左，上，右，下]或[水平，垂直]或只是一个数字为等于边距 
+			pageSize: 'A4', //默认情况下我们使用portrait或者自定义
+			pageOrientation: 'landscape', //你可以将它改为横向
+			pageMargins: [40, 20], // [左，上，右，下]或[水平，垂直]或只是一个数字为等于边距 
 			content: [{
-					text: '学生档案',
-					fontSize: 22,
-					alignment: 'center',
-					margin: [ 20, 20 ]
-				}, {
+				text: '广告位信息',
+				fontSize: 26,
+				bold: true,
+				alignment: 'left',
+				margin: [0, 10, 0, 20]
+			}, {
+				columns: [{
 					columns: [{
-						columns: [{
-							alignment: 'center',
-							style: 'tableExample',
+							alignment: 'left',
 							width: 335,
+							color: '#222',
 							table: {
-								headerRows: 1,
-								widths: ['*'],
+								widths: [85, '*'],
+								// headerRows: 1, // 横线位置
+								// keepWithHeaderRows: 1,
 								body: [
-									[{text: 'Header 1', style: 'tableHeader'}],
-									[{text:'Sample value 1Sample value 3',fillColor:'#ffffff'}],
-									[{text:'Sample value 1Sample value 3',fillColor:'#cccccc'}],
-									[{text:'Sample value 1Sample value 3',fillColor:'#ffffff'}],
-									[{text:'Sample value 1Sample value 3',fillColor:'#cccccc'}],
-									[{text:'Sample value 1Sample value 3',fillColor:'#ffffff'}],
-									[{text:'Sample value 1Sample value 3',fillColor:'#cccccc'}],
-									[{text:'Sample value 1Sample value 3',fillColor:'#ffffff'}],
-									[{text:'Sample value 1Sample value 3',fillColor:'#cccccc'}],
-									[{text:'Sample value 1Sample value 3',fillColor:'#ffffff'}],
 									[{
-										image: imgs[0].image,
-										alignment: 'right',
-										margin: [ 10, 10, 0, 0 ],
-										width:315,
-										height: 150
+										margin: [5, 5],
+										text: '品牌'
+									},{
+										margin: [5, 5],
+										text: '抖音'
+									}],
+									[{
+										fillColor: '#dddddd',
+										margin: [5, 5],
+										text: '媒体类型'
+									},{
+										fillColor: '#dddddd',
+										margin: [5, 5],
+										text: '候车亭'
+									}],
+									[{
+										margin: [5, 5],
+										text: '广告位编号'
+									},{
+										margin: [5, 5],
+										text: 'CDV153232115'
+									}],
+									[{
+										fillColor: '#dddddd',
+										margin: [5, 5],
+										text: '地理（位置）'
+									},{
+										fillColor: '#dddddd',
+										margin: [5, 5],
+										text: '郭守敬路'
+									}],
+									[{
+										margin: [5, 5],
+										text: '发布期'
+									},{
+										margin: [5, 5],
+										text: '2018-09-10 20:50:45'
+									}],
+									[{
+										fillColor: '#dddddd',
+										margin: [5, 5],
+										text: '点位名称'
+									},{
+										fillColor: '#dddddd',
+										margin: [5, 5],
+										text: '创意空间'
+									}],
+									[{
+										margin: [5, 5],
+										text: '城市'
+									},{
+										margin: [5, 5],
+										text: '上海市'
+									}],
+									[{
+										fillColor: '#dddddd',
+										margin: [5, 5],
+										text: '上刊监测日期'
+									},{
+										fillColor: '#dddddd',
+										margin: [5, 5],
+										text: '2018-09-25'
+									}],
+									[{
+										colSpan: 2,
+										image: imgs[1].image,
+										alignment: 'center',
+										margin: [0, 10, 0, 0],
+										width: 335,
+										height: 180
 									}]
 								]
 							},
+// 							table: {
+// 								headerRows: 5,
+// 								widths: ['*'],
+// 								body: [
+// 									[{
+// 										text: 'Header 1',
+// 									}],
+// 									[{
+// 										text: 'Sample value 1Sample value 3',
+// 										fillColor: '#ffffff'
+// 									}],
+// 									[{
+// 										text: 'Sample value 1Sample value 3',
+// 										fillColor: '#cccccc'
+// 									}],
+// 									[{
+// 										image: imgs[1].image,
+// 										alignment: 'center',
+// 										margin: [0, 10, 0, 0],
+// 										width: 335,
+// 										height: 180
+// 									}]
+// 								]
+// 							},
 							layout: 'headerLineOnly'
-						}, [{
-							columns: [{
-									image: imgs[0].image,
-									alignment: 'right',
-									margin: [ 0, 10, 0, 0 ],
-									width: 200,
-									height: 150
-								}, {
-									image: imgs[0].image,
-									alignment: 'right',
-									margin: [ 10, 10, 0, 0 ],
-									width: 200,
-									height: 150
-								}]
-							}, {
+						},
+						[{
 							columns: [{
 								image: imgs[0].image,
 								alignment: 'right',
-								margin: [ 0, 10, 0, 0 ],
+								margin: [0, 10, 0, 0],
 								width: 200,
-								height: 150
+								height: 100
 							}, {
 								image: imgs[0].image,
 								alignment: 'right',
-								margin: [ 10, 10, 0, 0 ],
+								margin: [10, 10, 0, 0],
 								width: 200,
-								height: 150
+								height: 100
 							}]
-						}]]
-					}]
-				}
-			],
-			header: {
-				image: 'logo.png',
-				width: 50,
-				height: 50,
-				alignment: 'left',
-				margin: [ 10, 10, 0, 0 ]
-			},
+						}, {
+							columns: [{
+								image: imgs[0].image,
+								alignment: 'right',
+								margin: [0, 10, 0, 0],
+								width: 200,
+								height: 100
+							}, {
+								image: imgs[0].image,
+								alignment: 'right',
+								margin: [10, 10, 0, 0],
+								width: 200,
+								height: 100
+							}]
+						}, {
+							alignment: 'left',
+							fontSize: 20,
+							margin: [0, 10, 0, 0],
+							ol: [
+								'item 1',
+								'item 2',
+								'item 3'
+							]
+						}]
+					]
+				}]
+			}],
+			// 			header: {
+			// 				image: 'logo-left.png',
+			// 				width: 50,
+			// 				height: 50,
+			// 				alignment: 'left',
+			// 				margin: [ 10, 10, 0, 0 ]
+			// 			},
 			footer: {
-				image: 'chapter.png',
-				width: 150,
-				alignment: 'right',
-				margin: [0, -100, 10, 10]
+				columns: [{
+						image: 'logo-left.png',
+						width: 100,
+						height: 20,
+						alignment: 'left',
+						margin: [40, -40, 0, 0]
+					},
+					{
+						width: '*',
+						text: ' '
+					},
+					{
+						image: 'chapter.png',
+						width: 111,
+						height: 80,
+						alignment: 'left',
+						margin: [-100, -80, 0, 0]
+					},
+					{
+						image: 'logo-right.png',
+						width: 62,
+						height: 20,
+						alignment: 'right',
+						margin: [40, -40, 0, 0]
+					},
+				]
 			},
 			defaultStyle: {
 				alignment: 'right',
