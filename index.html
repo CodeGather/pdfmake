@@ -43,9 +43,7 @@
 					c.width = img.width;
 					c.height = img.height;
 				}
-				console.log(img.src)
 				ctx.drawImage(img, 0, 0, c.width, c.height);
-
 				p.imgdata[index] = c.toDataURL('image/jpeg', 1);
 				for (i = 0; i < p.totalnum; ++i) {
 					if (p.imgdata[i] == null) break;
@@ -84,55 +82,37 @@
 		'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3359905508,327083786&fm=26&gp=0.jpg'
 	]);
 	a.oncomplete = function () {
-		var imgs = [[],[]];
 		var dataArrary=[];
 		var imgsOne;
 		for (key in this.imgdata) {
-			if(key==0){
-				imgsOne = this.imgdata[key];
-				continue;
-			}
-
-			if(dataArrary[key%2]){
-				dataArrary[key%2].columns.push({
-					image: this.imgdata[key],
-					alignment: 'center',
-					margin: [0, 10, 0, 0],
-					width: 200,
-					height: 100
-				})
-			}else{
+			if(!dataArrary[key%2]){ // 在数组中分别插入columns参数
 				dataArrary.push({
 					columns: []
 				})
 			}
+			if(key==0){  // 第一张图片为地图展示实行跳过
+				imgsOne = this.imgdata[key];
+				continue;
+			}
+			dataArrary[key%2].columns.push({
+				image: this.imgdata[key],
+				alignment: 'center',
+				margin: [0, 10, 0, 0],
+				width: 200,
+				height: 100
+			})
 		}
-		dataArrary.push({
-		// 	//  右侧描述信息
+		dataArrary.push({  // 数组的最后插入项目异常描述
+			//  右侧描述信息
 			alignment: 'left',
 			fontSize: 16,
 			heights: 20,
 			margin: [0, 10, 0, 0],
 			ol: [
-				'测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档',
+				'文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档',
+				'测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试'
 			]
 		})
-// console.log(dataArrary)
-		// [{
-		// 	//  右侧图片信息
-		// 	columns: imgs[0]
-		// }, {
-		// 	columns: imgs[1]
-		// }, {
-		// 	//  右侧描述信息
-		// 	alignment: 'left',
-		// 	fontSize: 16,
-		// 	heights: 20,
-		// 	margin: [0, 10, 0, 0],
-		// 	ol: [
-		// 		'测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档测试文档',
-		// 	]
-		// }]
 		pdfMake.fonts = {
 			Roboto: {
 				normal: 'simfang.ttf',
