@@ -18,13 +18,20 @@
 [cdnjs_img]: https://img.shields.io/cdnjs/v/pdfmake.svg?colorB=0E7FBF
 [cndjs_url]: https://cdnjs.com/libraries/pdfmake
 
-克隆后运行命令 
+克隆后运行命令
 npm install  
 
 下载自定义字体到/examples/fonts
 gulp buildFonts
 
 更改index.html中的名称
+
+
+pageSize: 'A4',  //默认情况下我们使用portrait或者自定义
+pageOrientation: 'landscape',  //你可以将它改为横向
+pageMargins: [40, 20],  // [左，上，右，下]或[水平，垂直]或只是一个数字为等于边距,
+headerRows: 1, // 横线位置(至上而下)
+keepWithHeaderRows: 1,
 
 Client/server side PDF printing in pure JavaScript
 
