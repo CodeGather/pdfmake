@@ -73,10 +73,11 @@
 
 	function ImageDataURL(urls,data) { //urls必須是字符串或字符串數組
 		this.totalnum = 0;
+		this.data = data;
 		this.imgdata = new Array();
 		this.emptyobj = new Object();
 		this.oncomplete = function () {
-			var config = {
+			var config = {  // 定义左侧类型名称
 				name: '品牌',
 				type: '媒体类型',
 				time: '广告位编号',
@@ -97,16 +98,19 @@
 				obj.margin = [5, 5];
 				arr.push(obj);
 				dataList.push(arr);
-				for(var key in data){
-					if(data.hasOwnProperty(key) && e===key){
+				if (this.data.constructor===Array && typeof this.data !== 'function'){
+					throw new TypeError('Transfer parameters are not object arrays.');
+				}
+				for(var key in this.data){
+					if(this.data.hasOwnProperty(key) && e===key){
 						dataList[i].push({
-							text: data[key],
+							text: this.data[key],
 							fillColor: dataList.length%2===0?'#dddddd':'#ffffff',
 							margin: dataList[i].length%2===1?[0, 5]:[5, 5],
 						})
 					}
 				}
-			})
+			}.bind(this))
 			// 图片组合
 			for (key in this.imgdata) {
 				if(!dataArrary[key%2]){  // 使用模2来处理分为两列并在数组中分别插入columns参数
@@ -270,7 +274,9 @@
 	}
 
 	$(".open").on("click", function (e) {
-		pdfMake.createPdf(a.oncomplete()).open();
+		pdfMake.createPdf(a.oncomplete()).getDataUrl(function(data){
+			console.log(data)
+		});
 	})
 
 	$(".download").on("click", function (e) {

@@ -33,7 +33,7 @@ pageMargins: [40, 20],  // [左，上，右，下]或[水平，垂直]或只是�
 headerRows: 1, // 横线位置(至上而下)
 keepWithHeaderRows: 1,
 
-Client/server side PDF printing in pure JavaScript
+Client/server side PDF printing in pure JavaScript http://pdfmake.org
 
 Check out [the playground](http://bpampuch.github.io/pdfmake/playground.html) and [examples](https://github.com/bpampuch/pdfmake/tree/master/examples).
 
