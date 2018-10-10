@@ -33,6 +33,17 @@ pageMargins: [40, 20],  // [左，上，右，下]或[水平，垂直]或只是�
 headerRows: 1, // 横线位置(至上而下)
 keepWithHeaderRows: 1,
 
+实现PDF直接下载功能
+pdfMake.createPdf(参数).download()
+download: ƒ (t,e,n)
+open: ƒ (t,e)
+print: ƒ (t,e)
+需要使用回调函数的API获取相应数据
+getBase64: ƒ (t,e)
+getBlob: ƒ (t,e)
+getBuffer: ƒ (t,e)
+getDataUrl: ƒ (t,e)
+
 Client/server side PDF printing in pure JavaScript http://pdfmake.org
 
 Check out [the playground](http://bpampuch.github.io/pdfmake/playground.html) and [examples](https://github.com/bpampuch/pdfmake/tree/master/examples).

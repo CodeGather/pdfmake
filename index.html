@@ -274,9 +274,7 @@
 	}
 
 	$(".open").on("click", function (e) {
-		pdfMake.createPdf(a.oncomplete()).getDataUrl(function(data){
-			console.log(data)
-		});
+		console.log(pdfMake.createPdf(a.oncomplete()));
 	})
 
 	$(".download").on("click", function (e) {
