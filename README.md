@@ -24,6 +24,8 @@ npm install
 下载自定义字体到/examples/fonts
 gulp buildFonts
 
+demo测试： https://codegather.github.io/pdfmake/
+
 更改index.html中的名称
 
 
