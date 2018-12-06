@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="Generator" content="EditPlus®">
+	<meta name="Author" content="">
+	<meta name="Keywords" content="">
+	<meta name="Description" content="">
+	<title>PDF生成、预览、下载、打印、合成多页PDF、打包等DEMO</title>
+  <!-- PDF生成所需依赖 -->
+	<script src="https://cdn.bootcss.com/jquery/1.12.1/jquery.min.js"></script>
+	<script src='./build/pdfmake.min.js'></script>
+	<script src='./build/vfs_fonts.js'></script>
+  <!-- ZIP文件生成所需依赖 -->
+	<script src='./build/jsZip/jszip.min.js'></script>
+	<script src='./build/jsZip/jszip-utils.js'></script>	
+  <script src='./build/jsZip/FileSaver.js'></script>
+</head>
+
+<body>
+	<button class="open">预览PDF</button>
+	<button class="download">下载PDF</button>
+	<button class="print">打印PDF</button>
+</body>
+<script>
+	var JsonData = [
+		{"id":81190,"claimCode":"户外监测-1","caseDesc":"必须按照规定拍照","customerName":"监测","customerAddress":"民立路共和路（公交站）","customerPhone":"400-123-123","serviceId":49,"technicianId":115207,"proId":3,"cityId":799,"regionId":803,"caseStatus":4,"createUser":"admin","createTime":1543479953000,"updateUser":"admin","updateTime":1543847071000,"isDeleted":false,"isUrgent":true,"projectId":690,"caseCost":"0","caseActualMoney":"0","expectStartTime":1543507200000,"expectCompleteTime":1543680000000,"completeTime":1543847071000,"completeMoneyTime":null,"addFixedAmout":0,"isFixedAmout":false,"serviceMoneyPercent":0,"serviceMoney":0,"customerCost":null,"backMoney":null,"servicingTime":null,"remarks":"未上刊,点位发布区域被贴小广告,画面不符","problemIds":"1,4,3","caseSource":0,"customerId":519,"position":"","positionName":"广告位名称","positionCount":null,"positionSize":"","positionMaterial":"","projectName":"户外监测","technicianName":null,"serviceName":"公交车","proName":null,"cityName":"上海市","regiontName":null,"location":"121.456136,31.244310","attachmentCover":"https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81190/doorHead-20181130180314616.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81190/doorHead-20181130180337132.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81190/doorHead-20181130180438626.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81190/doorHead-20181130180540633.jpg,","attachmentFile":null,"attachmentCheck":null,"advertisngName":null,"projectMediaId":null,"projectSurveyId":null,"isImages":true,"name":null,"mobile":null,"activityStartTime":null,"activityCompleteTime":null,"testingStartTime":null,"testingCompleteTime":null,"journalUpStartTime":null,"journalUpCompleteTime":null,"journalDownStartTime":null,"journalDownCompleteTime":null,"videoType":null,"videoNumber":null,"advertisingId":null,"attachmentImage":null},
+		{"id":81191,"claimCode":"户外监测-2","caseDesc":"必须按照规定拍照","customerName":"监测","customerAddress":"梅园路共和路（公交站）","customerPhone":"400-123-123","serviceId":49,"technicianId":115115,"proId":3,"cityId":799,"regionId":803,"caseStatus":4,"createUser":"admin","createTime":1543479953000,"updateUser":"admin","updateTime":1543846006000,"isDeleted":false,"isUrgent":false,"projectId":690,"caseCost":"0","caseActualMoney":"0","expectStartTime":1543507200000,"expectCompleteTime":1543680000000,"completeTime":1543846006000,"completeMoneyTime":null,"addFixedAmout":0,"isFixedAmout":false,"serviceMoneyPercent":0,"serviceMoney":0,"customerCost":null,"backMoney":null,"servicingTime":null,"remarks":"","problemIds":null,"caseSource":0,"customerId":519,"position":null,"positionName":"510路-民立路共和路（公交站）","positionCount":null,"positionSize":null,"positionMaterial":null,"projectName":"户外监测","technicianName":null,"serviceName":"公交车","proName":null,"cityName":"上海市","regiontName":null,"location":"121.457322,31.244385","attachmentCover":"https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81191/doorHead-20181130110947738.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81191/doorHead-20181130111011193.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81191/doorHead-20181130111037780.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81191/doorHead-20181130111105007.jpg,","attachmentFile":null,"attachmentCheck":null,"advertisngName":null,"projectMediaId":null,"projectSurveyId":null,"isImages":true,"name":null,"mobile":null,"activityStartTime":null,"activityCompleteTime":null,"testingStartTime":null,"testingCompleteTime":null,"journalUpStartTime":null,"journalUpCompleteTime":null,"journalDownStartTime":null,"journalDownCompleteTime":null,"videoType":null,"videoNumber":null,"advertisingId":null,"attachmentImage":null},
+		{"id":81192,"claimCode":"户外监测-3","caseDesc":"必须按照规定拍照","customerName":"监测","customerAddress":"汉中路地铁站（公交站）","customerPhone":"400-123-123","serviceId":49,"technicianId":115208,"proId":3,"cityId":799,"regionId":805,"caseStatus":1,"createUser":"admin","createTime":1543479953000,"updateUser":"接单：115208","updateTime":1543842613000,"isDeleted":false,"isUrgent":false,"projectId":690,"caseCost":"0","caseActualMoney":null,"expectStartTime":1543507200000,"expectCompleteTime":1543680000000,"completeTime":null,"completeMoneyTime":null,"addFixedAmout":null,"isFixedAmout":false,"serviceMoneyPercent":0,"serviceMoney":null,"customerCost":null,"backMoney":null,"servicingTime":null,"remarks":null,"problemIds":null,"caseSource":0,"customerId":519,"position":null,"positionName":"502路-梅园路共和路（公交站）","positionCount":null,"positionSize":null,"positionMaterial":null,"projectName":"户外监测","technicianName":null,"serviceName":"公交车","proName":null,"cityName":"上海市","regiontName":null,"location":"121.458855,31.240571","attachmentCover":"https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81192/doorHead-20181204113505882.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81192/doorHead-20181204113523040.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81192/doorHead-20181204113603188.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81192/doorHead-20181204113637223.jpg,","attachmentFile":null,"attachmentCheck":null,"advertisngName":null,"projectMediaId":null,"projectSurveyId":null,"isImages":true,"name":null,"mobile":null,"activityStartTime":null,"activityCompleteTime":null,"testingStartTime":null,"testingCompleteTime":null,"journalUpStartTime":null,"journalUpCompleteTime":null,"journalDownStartTime":null,"journalDownCompleteTime":null,"videoType":null,"videoNumber":null,"advertisingId":null,"attachmentImage":null},
+		{"id":81193,"claimCode":"户外监测-4","caseDesc":"必须按照规定拍照","customerName":"监测","customerAddress":"上海火车站（共和路）（公交站）","customerPhone":"400-123-123","serviceId":49,"technicianId":115208,"proId":3,"cityId":799,"regionId":804,"caseStatus":4,"createUser":"admin","createTime":1543479953000,"updateUser":"admin","updateTime":1543845045000,"isDeleted":false,"isUrgent":false,"projectId":690,"caseCost":"0","caseActualMoney":"0","expectStartTime":1543507200000,"expectCompleteTime":1543680000000,"completeTime":1543845045000,"completeMoneyTime":null,"addFixedAmout":0,"isFixedAmout":true,"serviceMoneyPercent":0,"serviceMoney":0,"customerCost":null,"backMoney":null,"servicingTime":null,"remarks":"","problemIds":null,"caseSource":0,"customerId":519,"position":"","positionName":"741路-梅园路共和路（公交站）","positionCount":null,"positionSize":"","positionMaterial":"","projectName":"户外监测","technicianName":null,"serviceName":"公交车","proName":null,"cityName":"上海市","regiontName":null,"location":"121.461136,31.245539","attachmentCover":"https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81193/doorHead-20181203200747340.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81193/doorHead-20181203200819046.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81193/doorHead-20181203200836325.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81193/doorHead-20181203200903178.jpg,","attachmentFile":null,"attachmentCheck":null,"advertisngName":null,"projectMediaId":null,"projectSurveyId":null,"isImages":true,"name":null,"mobile":null,"activityStartTime":null,"activityCompleteTime":null,"testingStartTime":null,"testingCompleteTime":null,"journalUpStartTime":null,"journalUpCompleteTime":null,"journalDownStartTime":null,"journalDownCompleteTime":null,"videoType":null,"videoNumber":null,"advertisingId":null,"attachmentImage":null},
+		{"id":81196,"claimCode":"户外监测-7","caseDesc":"必须按照规定拍照","customerName":"监测","customerAddress":"汉中路地铁站2号口","customerPhone":"400-123-123","serviceId":49,"technicianId":115209,"proId":3,"cityId":799,"regionId":805,"caseStatus":4,"createUser":"admin","createTime":1543479953000,"updateUser":"admin","updateTime":1543586400000,"isDeleted":false,"isUrgent":false,"projectId":690,"caseCost":"0","caseActualMoney":"0","expectStartTime":1543507200000,"expectCompleteTime":1543680000000,"completeTime":1543586400000,"completeMoneyTime":null,"addFixedAmout":0,"isFixedAmout":true,"serviceMoneyPercent":0,"serviceMoney":0,"customerCost":null,"backMoney":null,"servicingTime":null,"remarks":"","problemIds":null,"caseSource":0,"customerId":519,"position":"","positionName":"地铁一号线汉中路站-1号口","positionCount":null,"positionSize":"","positionMaterial":"","projectName":"户外监测","technicianName":null,"serviceName":"地铁-其它","proName":null,"cityName":"上海市","regiontName":null,"location":"121.459625,31.241848","attachmentCover":"https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81196/doorHead-20181130182058063.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81196/doorHead-20181130182501272.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81196/doorHead-20181130182545161.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81196/doorHead-20181130182609001.jpg,","attachmentFile":null,"attachmentCheck":null,"advertisngName":null,"projectMediaId":null,"projectSurveyId":null,"isImages":true,"name":null,"mobile":null,"activityStartTime":null,"activityCompleteTime":null,"testingStartTime":null,"testingCompleteTime":null,"journalUpStartTime":null,"journalUpCompleteTime":null,"journalDownStartTime":null,"journalDownCompleteTime":null,"videoType":null,"videoNumber":null,"advertisingId":null,"attachmentImage":null},
+		{"id":81198,"claimCode":"户外监测-9","caseDesc":"必须按照规定拍照","customerName":"监测","customerAddress":"汉中路地铁站4号口","customerPhone":"400-123-123","serviceId":49,"technicianId":115207,"proId":3,"cityId":799,"regionId":805,"caseStatus":4,"createUser":"admin","createTime":1543479953000,"updateUser":"admin","updateTime":1543550200000,"isDeleted":false,"isUrgent":false,"projectId":690,"caseCost":"0","caseActualMoney":"0","expectStartTime":1543507200000,"expectCompleteTime":1543680000000,"completeTime":1543550200000,"completeMoneyTime":null,"addFixedAmout":0,"isFixedAmout":true,"serviceMoneyPercent":0,"serviceMoney":0,"customerCost":null,"backMoney":null,"servicingTime":null,"remarks":"","problemIds":null,"caseSource":0,"customerId":519,"position":null,"positionName":"汉中路地铁站3号口","positionCount":null,"positionSize":null,"positionMaterial":null,"projectName":"户外监测","technicianName":null,"serviceName":"地铁-其它","proName":null,"cityName":"上海市","regiontName":null,"location":"121.458317,31.241489","attachmentCover":"https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81198/doorHead-20181130111043027.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81198/doorHead-20181130111100859.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81198/doorHead-20181130111112326.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81198/doorHead-20181130111135623.jpg,","attachmentFile":null,"attachmentCheck":null,"advertisngName":null,"projectMediaId":null,"projectSurveyId":null,"isImages":true,"name":null,"mobile":null,"activityStartTime":null,"activityCompleteTime":null,"testingStartTime":null,"testingCompleteTime":null,"journalUpStartTime":null,"journalUpCompleteTime":null,"journalDownStartTime":null,"journalDownCompleteTime":null,"videoType":null,"videoNumber":null,"advertisingId":null,"attachmentImage":null},
+		{"id":81201,"claimCode":"户外监测-12","caseDesc":"必须按照规定拍照","customerName":"监测","customerAddress":"汉中路地铁站7号口","customerPhone":"400-123-123","serviceId":49,"technicianId":115110,"proId":3,"cityId":799,"regionId":805,"caseStatus":0,"createUser":"admin","createTime":1543479953000,"updateUser":"admin","updateTime":1543548036000,"isDeleted":false,"isUrgent":false,"projectId":690,"caseCost":"0","caseActualMoney":null,"expectStartTime":1543507200000,"expectCompleteTime":1543680000000,"completeTime":null,"completeMoneyTime":null,"addFixedAmout":null,"isFixedAmout":false,"serviceMoneyPercent":0,"serviceMoney":null,"customerCost":null,"backMoney":null,"servicingTime":null,"remarks":"","problemIds":null,"caseSource":0,"customerId":519,"position":"","positionName":"汉中路地铁站6号口","positionCount":null,"positionSize":"","positionMaterial":"","projectName":"户外监测","technicianName":null,"serviceName":"地铁-其它","proName":null,"cityName":"上海市","regiontName":null,"location":"121.458388,31.241105","attachmentCover":"https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81201/doorHead-20181204090852938.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81201/doorHead-20181204090937827.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81201/doorHead-20181204090955085.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81201/doorHead-20181204091003203.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81201/doorHead-20181204091013536.jpg,","attachmentFile":null,"attachmentCheck":null,"advertisngName":null,"projectMediaId":null,"projectSurveyId":null,"isImages":true,"name":null,"mobile":null,"activityStartTime":null,"activityCompleteTime":null,"testingStartTime":null,"testingCompleteTime":null,"journalUpStartTime":null,"journalUpCompleteTime":null,"journalDownStartTime":null,"journalDownCompleteTime":null,"videoType":null,"videoNumber":null,"advertisingId":null,"attachmentImage":null},
+		{"id":81202,"claimCode":"户外监测-13","caseDesc":"必须按照规定拍照","customerName":"监测","customerAddress":"汉中路地铁站8号口","customerPhone":"400-123-123","serviceId":49,"technicianId":115210,"proId":3,"cityId":799,"regionId":805,"caseStatus":4,"createUser":"admin","createTime":1543479953000,"updateUser":"admin","updateTime":1543584008000,"isDeleted":false,"isUrgent":false,"projectId":690,"caseCost":"0","caseActualMoney":"0","expectStartTime":1543507200000,"expectCompleteTime":1543680000000,"completeTime":1543584008000,"completeMoneyTime":null,"addFixedAmout":0,"isFixedAmout":true,"serviceMoneyPercent":0,"serviceMoney":0,"customerCost":null,"backMoney":null,"servicingTime":null,"remarks":"","problemIds":null,"caseSource":0,"customerId":519,"position":"","positionName":"汉中路地铁站7号口","positionCount":null,"positionSize":"","positionMaterial":"","projectName":"户外监测","technicianName":null,"serviceName":"地铁-其它","proName":null,"cityName":"上海市","regiontName":null,"location":"121.470784,31.242441","attachmentCover":"https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81202/doorHead-20181130182127631.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81202/doorHead-20181130182203360.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81202/doorHead-20181130182227914.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81202/doorHead-20181130182255844.jpg,","attachmentFile":null,"attachmentCheck":null,"advertisngName":null,"projectMediaId":null,"projectSurveyId":null,"isImages":true,"name":null,"mobile":null,"activityStartTime":null,"activityCompleteTime":null,"testingStartTime":null,"testingCompleteTime":null,"journalUpStartTime":null,"journalUpCompleteTime":null,"journalDownStartTime":null,"journalDownCompleteTime":null,"videoType":null,"videoNumber":null,"advertisingId":null,"attachmentImage":null},
+		{"id":81189,"claimCode":"恒丰路路段广告监测-1","caseDesc":"4张图片必须横拍，照片清晰，若点位有问题请及时反馈","customerName":"玖凤客服","customerAddress":"民立路共和路（公交站）","customerPhone":"15801953700","serviceId":49,"technicianId":115210,"proId":3,"cityId":799,"regionId":803,"caseStatus":4,"createUser":"admin","createTime":1543390465000,"updateUser":"admin","updateTime":1543586596000,"isDeleted":false,"isUrgent":false,"projectId":689,"caseCost":"0","caseActualMoney":"0","expectStartTime":1543334400000,"expectCompleteTime":1544198400000,"completeTime":1543586596000,"completeMoneyTime":null,"addFixedAmout":0,"isFixedAmout":true,"serviceMoneyPercent":0,"serviceMoney":0,"customerCost":null,"backMoney":null,"servicingTime":null,"remarks":"","problemIds":null,"caseSource":0,"customerId":519,"position":"请注意来往车辆安全","positionName":"","positionCount":null,"positionSize":"","positionMaterial":"","projectName":"恒丰路路段广告监测","technicianName":null,"serviceName":"候车亭","proName":null,"cityName":"上海市","regiontName":null,"location":"121.456136,31.244310","attachmentCover":"https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81189/doorHead-20181130180740886.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81189/doorHead-20181130180803009.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81189/doorHead-20181130180818599.jpg,https://jiufeng.oss-cn-shanghai.aliyuncs.com/attachment/case_images/81189/doorHead-20181130180852319.jpg,","attachmentFile":null,"attachmentCheck":null,"advertisngName":null,"projectMediaId":null,"projectSurveyId":null,"isImages":true,"name":null,"mobile":null,"activityStartTime":null,"activityCompleteTime":null,"testingStartTime":null,"testingCompleteTime":null,"journalUpStartTime":null,"journalUpCompleteTime":null,"journalDownStartTime":null,"journalDownCompleteTime":null,"videoType":null,"videoNumber":null,"advertisingId":null,"attachmentImage":null}
+	];
+	/* 浏览器兼容性处理 */
+	if (!Object.keys) {
+	  Object.keys = (function () {
+	    var hasOwnProperty = Object.prototype.hasOwnProperty,
+	        hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
+	        dontEnums = [
+	          'toString',
+	          'toLocaleString',
+	          'valueOf',
+	          'hasOwnProperty',
+	          'isPrototypeOf',
+	          'propertyIsEnumerable',
+	          'constructor'
+	        ],
+	        dontEnumsLength = dontEnums.length;
+
+	    return function (obj) {
+	      if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null) throw new TypeError('Object.keys called on non-object');
+
+	      var result = [];
+
+	      for (var prop in obj) {
+	        if (hasOwnProperty.call(obj, prop)) result.push(prop);
+	      }
+
+	      if (hasDontEnumBug) {
+	        for (var i=0; i < dontEnumsLength; i++) {
+	          if (hasOwnProperty.call(obj, dontEnums[i])) result.push(dontEnums[i]);
+	        }
+	      }
+	      return result;
+	    }
+	  })()
+	};
+	
+	/* 生成PDF方法封装
+	 * 此方法分别依赖以下文件pdfmake.js、vfs_fonts.js、jszip.min.js、jszip-utils.js、FileSaver.js
+	 * 相关链接 https://github.com/CodeGather?tab=repositories
+	 * 第一参数支持批量以及单条数据
+	 * 第二参数0为下载ZIP文件、1为PDF预览、2为PDF下载、3为PDF打印
+	 * 第三参数为下载文件名称支持自定义名称（以及后缀选填）（不填写默认以时间戳命名）
+	 * 21克的爱情 
+	 * 2018-10-11
+	 */
+	function ImageDataURL(data, type, name) { //urls必須是字符串或字符串數組
+		this.imgdata = new Array();
+		this.emptyobj = new Object();
+		this.totalnum = 0;
+		this.data = data;
+		this.type = type;
+		this.name = name;
+		this.isShowMap = false;    // 是否显示左侧地图信息;
+		this.isShowRemarks = false;// 是否显示右侧描述信息;
+		this.BigDataArrary=[];     // 右侧数据数组;
+		this.dataList = [];        // 左侧数据数组;
+		this.zipArray = [];        // 压缩包数据数组;
+		this.lengthData = 0;
+		var _this = this;
+		this.config = {            // 定义左侧类型名称
+				claimCode: '品牌',
+				serviceName: '媒体类型',
+				positionMaterial: '广告位编号',
+				customerAddress: '地理（位置）',
+				expectStarTime: '广告发布期',
+				positionName: '点位名称',
+				cityName: '城市',
+				//expectStarTime: '上刊监测日期',
+		}
+		this.objArray = Object.keys(_this.config);
+		this.option = {
+			pageSize: 'A4',                 // 默认情况下我们使用portrait或者自定义
+			pageOrientation: 'landscape',   // 改为横向
+			pageMargins: [40, 50, 40, 20],  // [左，上，右，下]或[水平，垂直]或只是一个数字为等于边距,
+			defaultStyle: {
+				alignment: 'right',
+				columnGap: 20
+			},
+			header: {
+				image: 'logo-left.png',
+				width: 100,
+				height: 50,
+				margin: [ 30, 20, 0, 0 ]
+			},
+			footer: {   // 底部logo图片信息
+				columns: [{
+					image: 'logo-left.png',
+					width: 100,
+					height: 20,
+					margin: [-40, -40, 0, 0]
+				}, {
+					width: '*',
+					text: ' '
+				}, {
+					image: 'chapter.png',
+					width: 130,
+					height: 70,
+					margin: [100, -80, 0, 0]
+				}, {
+					image: 'logo-right.png',
+					width: 62,
+					height: 20,
+					margin: [40, -40, 0, 0]
+				}]
+			}
+		}
+		pdfMake.fonts = {
+			Roboto: {
+				normal: 'simfang.ttf',
+				bold: 'simfang.ttf',
+				italics: 'simfang.ttf',
+				bolditalics: 'simfang.ttf'
+			}
+		};
+		this.oncomplete = function (index, itemIndex) {
+			// 右侧图片组合
+			console.log("传递的下标："+itemIndex + "----》img的长度："+_this.imgdata.length)
+			if( _this.data.length === _this.imgdata.length && _this.imgdata[_this.imgdata.length-1].length===4 ){
+				console.log("数据加载完毕")
+				for(var i=0; i<_this.imgdata.length; i++){
+					var arrayDataImg = [];
+					_this.imgdata[i].forEach(function(itemImgDate,b){
+						if(!arrayDataImg[b%2]){  // 使用模2来处理分为两列并在数组中分别插入columns参数
+							arrayDataImg.push({
+								columns: []
+							})
+						}
+						arrayDataImg[b%2].columns.push({
+							alignment: "center",
+							margin: [ 0, 10, 0, 0 ],
+							width: 200,
+							image: itemImgDate.data,
+							height: 100
+						})
+					})
+					_this.BigDataArrary[i*2+1].columns[0].columns.push(arrayDataImg);
+				}
+				_this.db.content = _this.BigDataArrary;
+			}
+			return _this.option;
+		};
+		
+		/* 获取base64图片数据方法一 */
+		this.getDataURL = function (url, index, itemIndex) {
+			var c = document.createElement("canvas");
+			var ctx = c.getContext("2d");
+			var img = new Image();
+			
+			var protocol = document.location.protocol;
+			var itemUrl = protocol+url.split(":")[1];
+			
+			img.src = itemUrl;
+			img.crossOrigin = "*";
+			img.onload = function () {
+				var i;
+				var maxwidth = 500;
+				var scale = 1.0;
+				if (img.width > maxwidth) {
+					scale = maxwidth / img.width;
+					c.width = maxwidth;
+					c.height = Math.floor(img.height * scale);
+				} else {
+					c.width = img.width;
+					c.height = img.height;
+				}
+				ctx.drawImage(img, 0, 0, c.width, c.height);
+				if(!_this.imgdata[index]){
+					_this.imgdata[index] = [];
+				}
+				_this.imgdata[index].push({
+					data: c.toDataURL('image/jpeg', 0.95),
+					index: index
+				});
+				for (i = 0; i < _this.totalnum; ++i) {
+					if (_this.imgdata[i] == null) break;
+				}
+				if (i == _this.totalnum) {
+					_this.oncomplete(index, itemIndex);
+				}
+			};
+			img.onerror = function () {
+				_this.imgdata[index] = _this.emptyobj;
+				for (i = 0; i < _this.totalnum; ++i) {
+					if (_this.imgdata[i] == null) break;
+				}
+				if (i == _this.totalnum) {
+					_this.oncomplete(index, itemIndex);
+				}
+			};
+		};
+		
+		/* 获取base64图片数据方法二 */
+		this.blobOrBase64 = function(imgUrl, type, fn){
+			window.URL = window.URL || window.webkitURL;
+			var xhr = new XMLHttpRequest();
+			xhr.open("get", imgUrl, true);
+				// 至关重要
+			xhr.responseType = "blob";
+			xhr.onload = function () {
+				if (this.status == 200) {
+					//得到一个blob对象
+					var blob = this.response;
+					var oFileReader = new FileReader();
+					//  至关重要
+					if(type===0){
+						oFileReader.onloadend = function (e) {
+							fn && fn(e.target.result);
+						};
+					} else if(type===1){
+						var blobData = window.URL.createObjectURL(blob);
+						fn && fn(blobData);
+					}
+					oFileReader.readAsDataURL(blob);
+				}
+			}
+			xhr.send();
+		};
+		
+		/* 依次加载base64数据 */
+		this.imgBolbOrBase64Data = function(){
+			if(_this.data[_this.lengthData]){
+				/* idx需要在loopData方法外创建，loopData相当于循环体
+				 * arrayDataImg在每一项数据处理完成后需要清空所以同样要在循环体外声明
+				 * dataItem为动态的每项数据，必要条件为_this.lengthData动态改变。
+				 */
+				var idx = 0;
+				var arrayDataImg = [];
+				var dataItem = _this.data[_this.lengthData].attachmentCover.slice(0,-1).split(',');
+				function loopData(){
+					if( dataItem[idx] ){
+						_this.blobOrBase64(dataItem[idx], 0, function(imgData){
+							if( imgData ){
+								if( arrayDataImg.length < 2 ){  // 判断左右两边是否为数组否则创建并插入columns参数
+									arrayDataImg.push({
+										columns: []
+									})
+								}
+								/* 在以上条件完成之后进行数据插入 */
+								arrayDataImg[(idx%2)].columns.push({
+									alignment: "center",
+									image: imgData,
+									margin: [0, 0, 0, 20],
+									width: 200,
+									height: 150
+								})
+								
+								/* 判断数据的处理程度 */
+								if( dataItem.length-1 === idx ){
+									console.log("单项数据加载完毕");
+									/* 服务ID不能为49、52插入最後一组异常描述数据 */
+									if( _this.isShowRemarks && _this.data[_this.lengthData].serviceId != 49 && _this.data[_this.lengthData].serviceId!=52 ){  
+											dataArrary.push({  // 右侧描述信息 数组的最后插入项目异常描述
+													alignment: 'left',
+													fontSize: 16,
+													heights: 20,
+													margin: [0, -10, 0, 0],
+													ol: data.remarks.split(',')
+											})
+									}
+									
+									if(_this.lengthData===_this.data.length-1){
+										console.log("所有数据加载完毕");
+										_this.lengthData = 0;
+										/* 所有数据处理完毕后进行content的数据插入 */
+										_this.option.content = _this.BigDataArrary;
+										/* 所有数据处理完毕后交给下一个方法继续处理 */
+										_this.doneData(_this.option);
+									} else {
+										/* 单项数据完成后进行整体插入到content数据当中 */
+										if(_this.BigDataArrary[_this.lengthData*2+1]){
+											_this.BigDataArrary[_this.lengthData*2+1].columns[0].columns.push(arrayDataImg);
+										  _this.lengthData++;
+											_this.imgBolbOrBase64Data(_this.data)
+										}
+									}
+								} else {
+									/* 下标的处理需要在左右两边数据处理完成后操作 */
+									idx++;
+									loopData(_this.data);
+								}
+							}
+						})
+					}
+				}
+				loopData(_this.data);
+			}
+		};
+		
+		/* 所有数据加载完毕后处理方法 */
+		this.doneData = function(optionData){
+			if(optionData){
+				if(_this.type===0){        // 下载ZIP文件
+					_this.downloadZip();
+					pdfMake.createPdf(_this.option).getBlob(function(req){
+						_this.zipArray.file( new Date().getTime() + '.pdf', req );
+						_this.downloadZip();
+					});
+				} else if(_this.type===1){ // 预览
+					pdfMake.createPdf(_this.option).open();
+				} else if(_this.type===2){ // 下载
+					var pdfName = _this.name? _this.name : new Date().getTime()+'.pdf';
+					pdfMake.createPdf(_this.option).download(pdfName);
+				} else if(_this.type===3){ // 打印
+					pdfMake.createPdf(_this.option).print();
+				}
+			}
+		};
+		
+		/* 下载ZIP 文件 */
+		this.downloadZip = function(){
+			_this.zipArray.generateAsync({type:"blob"}).then(function(content) {
+				/*
+					* 保存下载文件
+					* 依赖js文件FileSaver.js
+					*/
+				saveAs(content, new Date().getTime()+".zip");
+			}); 
+		};
+		
+		// 循环需要生成PDF的数据每一条为一页PDF
+		for(var m=0;m<this.data.length;m++){
+			// 左侧数据组合
+			_this.dataList[m] = [];
+			_this.objArray.forEach(function(e,i){
+				var colorCode = _this.dataList[m].length%2===1?'#dddddd':'#ffffff';
+				_this.dataList[m].push([{
+					fillColor: colorCode,
+					text: _this.config[e],
+					margin: [5, 5]
+				},{
+					text: _this.data[m][e] || '',
+					fillColor: colorCode,
+					margin: [5, 5],
+				}]);
+				
+				/* 在左侧循环完最后一组时添加地图图片 */
+				if( m == _this.objArray.length-1 && _this.showMap ){  
+					_this.blobOrBase64(dataItem[idx], 0, function(imgData){
+						if( imgData ){
+							_this.dataList.push([{
+								colSpan: 2,
+								image: imgData,
+								alignment: 'center',
+								margin: [0, 10, 0, 0],
+								width: 310,
+								height: 180
+							}])
+						}
+					})
+				}
+			})
+			
+			/* PDF页面的第一个对象 */
+			var objData = {
+				text: _this.data[m].claimCode, //'广告位信息',
+				fontSize: 26,
+				bold: true,
+				alignment: 'left',
+				margin: [0, 10, 0, 20] 
+			}
+			
+			/* 从第二个开始需要增加 before 使其换行 */
+			if( m > 0){
+				objData.pageBreak = 'before';
+			}
+			
+			/* PDF合成关键输出一页需要两个对象 */
+			_this.BigDataArrary.push( objData, {
+				columns: [{
+					columns: [{
+						layout: 'headerLineOnly',
+						alignment: 'left',
+						width: 340,
+						color: '#222',
+						table: {
+							widths: [ 85, "*" ],
+							body: _this.dataList[m]
+						}
+					}]
+				}]
+			})
+			
+			/* 循环每个订单中的图片 */
+// 			var urls = this.data[m].attachmentCover.slice(0,-1).split(',');
+// 			if (urls instanceof Array) {
+// 				this.totalnum = urls.length;
+// 				this.imgdata = new Array(this.totalnum);
+// 				_this.imgBolbOrBase64Data(urls)
+// 				for (key in urls) {
+// 					(function(item, m, key){
+// 						setTimeout(function(){
+// 							_this.getDataURL(item, m, key);
+// 							
+// 						},0)
+// 					})(urls[key], m, key)
+// 				}
+// 			} else {
+// 				this.imgdata = new Array(1);
+// 				this.totalnum = 1;
+// 				this.getDataURL(urls, 0);
+// 			}
+		}
+			
+		/* 加载右侧数据 */
+		this.imgBolbOrBase64Data(_this.data);
+	}
+	
+	new ImageDataURL(JsonData, 2);
+// 	$(".open").on("click", function (e) {
+// 		pdfMake.createPdf(a.option).open();
+// 	})
+// 
+// 	$(".download").on("click", function (e) {
+// 		pdfMake.createPdf(a).download();
+// 	})
+// 
+// 	$(".print").on("click", function (e) {
+// 		pdfMake.createPdf(a).print();
+// 	})
+
+</script>
+
+</html>
