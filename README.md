@@ -19,9 +19,14 @@
 [cndjs_url]: https://cdnjs.com/libraries/pdfmake
 
 克隆后运行命令
+npm install gulp
+
+npm i gulp-cli -g
+
 npm install  
 
 下载自定义字体到/examples/fonts
+
 gulp buildFonts
 
 demo测试： https://codegather.github.io/pdfmake/
