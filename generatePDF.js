@@ -8,6 +8,7 @@
  * 2018-10-11
  */
 !(function(window, document) {
+	/* 导出PDF 方法封装第一版 当前试用版 */
 	function ImageDataGeneratePDF(data, type, name) { //urls必須是字符串或字符串數組
 		this.imgdata = new Array();
 		this.emptyobj = new Object();
@@ -320,8 +321,24 @@
 										_this.lengthData = 0;
 										/* 所有数据处理完毕后进行content的数据插入 */
 										_this.option.content = _this.BigDataArrary;
-										/* 所有数据处理完毕后交给下一个方法继续处理 */
-										_this.doneData(_this.option);
+										
+										/* 处理最后一张品牌logo */
+										_this.blobOrBase64(_this.data[_this.lengthData].attachmentFile, 0, function( HeadImgData ){
+											console.log(HeadImgData)
+											/* 判断数据是否存在 */
+											if( HeadImgData ){
+												var headData={
+													image: HeadImgData,
+													width: 100,
+													height: 50,
+													margin: [ 30, 20, 0, 0 ]
+												}
+												_this.option.header = headData;
+
+												/* 所有数据处理完毕后交给下一个方法继续处理 */
+												_this.doneData(_this.option);
+											}
+										})
 									} else {
 										/* 单项数据完成后进行整体插入到content数据当中 */
 										if(_this.BigDataArrary[_this.lengthData*2+1]){
@@ -375,7 +392,8 @@
 		};
 		
 	}
-
+	
+	/* 导出PDF 方法封装第二版 当前试用版 */
 	function DataGeneratePDF(data, type, name){
 		this.data = data;
 		this.type = type;
@@ -404,12 +422,6 @@
 			defaultStyle: {
 				alignment: 'right',
 				columnGap: 20
-			},
-			header: {
-				image: 'logo-left.png',
-				width: 100,
-				height: 50,
-				margin: [ 30, 20, 0, 0 ]
 			},
 			footer: {   // 底部logo图片信息
 				columns: [{
@@ -458,7 +470,7 @@
 						text: _this.config[e],
 						margin: [5, 5]
 					},{
-						text: _this.data[m][e] || '',
+						text: e=='expectStarTime'?app.format_time_stamp("yyyy-MM-dd",_this.data[m].expectStartTime) + " <-------> " + app.format_time_stamp("yyyy-MM-dd",_this.data[m].expectCompleteTime) :(_this.data[m][e] || ''),
 						fillColor: colorCode,
 						margin: [5, 5],
 					}]);
@@ -562,35 +574,50 @@
 									width: 200,
 									height: 150
 								})
-								
+
 								/* 判断数据的处理程度 */
 								if( dataItem.length-1 === idx ){
 									console.log("单项数据加载完毕");
 									/* 服务ID不能为49、52插入最後一组异常描述数据 */
 									if( _this.isShowRemarks && _this.data[_this.lengthData].serviceId != 49 && _this.data[_this.lengthData].serviceId!=52 ){  
-											dataArrary.push({  // 右侧描述信息 数组的最后插入项目异常描述
-													alignment: 'left',
-													fontSize: 16,
-													heights: 20,
-													margin: [0, -10, 0, 0],
-													ol: data.remarks.split(',')
-											})
+										dataArrary.push({  // 右侧描述信息 数组的最后插入项目异常描述
+											alignment: 'left',
+											fontSize: 16,
+											heights: 20,
+											margin: [0, -10, 0, 0],
+											ol: data.remarks.split(',')
+										})
 									}
 									
+									/* 单项数据完成后进行整体插入到content数据当中 */
+									if(_this.BigDataArrary[_this.lengthData*2+1]){
+										_this.BigDataArrary[_this.lengthData*2+1].columns[0].columns.push(arrayDataImg);
+									}
 									if(_this.lengthData===_this.data.length-1){
 										console.log("所有数据加载完毕");
 										_this.lengthData = 0;
 										/* 所有数据处理完毕后进行content的数据插入 */
 										_this.option.content = _this.BigDataArrary;
-										/* 所有数据处理完毕后交给下一个方法继续处理 */
-										_this.doneData(_this.option);
+										/* 处理最后一张品牌logo */
+										_this.blobOrBase64(_this.data[_this.lengthData].attachmentFile, 0, function( HeadImgData ){
+											/* 判断数据是否存在 */
+											if( HeadImgData ){
+												var headData={
+													image: HeadImgData,
+													width: 100,
+													height: 50,
+													margin: [ 30, 20, 0, 0 ]
+												}
+												_this.option.header = headData;
+
+												/* 所有数据处理完毕后交给下一个方法继续处理 */
+												_this.doneData(_this.option);
+											}
+										})
 									} else {
 										/* 单项数据完成后进行整体插入到content数据当中 */
-										if(_this.BigDataArrary[_this.lengthData*2+1]){
-											_this.BigDataArrary[_this.lengthData*2+1].columns[0].columns.push(arrayDataImg);
-											_this.lengthData++;
-											_this.imgBolbOrBase64Data(_this.data)
-										}
+										_this.lengthData++;
+										_this.imgBolbOrBase64Data(_this.data)
 									}
 								} else {
 									/* 下标的处理需要在左右两边数据处理完成后操作 */
@@ -606,11 +633,17 @@
 		},
 		/* 获取base64图片数据方法二 */
 		blobOrBase64: function(imgUrl, type, fn){
+			var protocol = document.location.protocol;
+			var itemUrl = protocol + (imgUrl.split(":")[1]);
+
 			window.URL = window.URL || window.webkitURL;
 			var xhr = new XMLHttpRequest();
-			xhr.open("get", imgUrl, true);
+			xhr.open("get", itemUrl, true);
 				// 至关重要
 			xhr.responseType = "blob";
+			//xhr.onreadystatechange=function(){
+			//	console.log(this)
+			//}
 			xhr.onload = function () {
 				if (this.status == 200) {
 					//得到一个blob对象
@@ -650,8 +683,147 @@
 				}
 			}
 		},
+		/* 获取浏览器信息 */
+		getBrowserMessage: function(n) { 
+			/* 
+             * getBrowser("n"); // 所获得的就是浏览器所用内核。
+			 * getBrowser("v");// 所获得的就是浏览器的版本号。
+			 * getBrowser();// 所获得的就是浏览器内核加版本号。
+			 */
+		  var ua = navigator.userAgent.toLowerCase(),s,name = '',ver = 0;  
+		  //探测浏览器
+		  (s = ua.match(/msie ([\d.]+)/)) ? _set("ie", _toFixedVersion(s[1])):  
+		  (s = ua.match(/firefox\/([\d.]+)/)) ? _set("firefox", _toFixedVersion(s[1])) :  
+		  (s = ua.match(/chrome\/([\d.]+)/)) ? _set("chrome", _toFixedVersion(s[1])) :  
+		  (s = ua.match(/opera.([\d.]+)/)) ? _set("opera", _toFixedVersion(s[1])) :  
+		  (s = ua.match(/version\/([\d.]+).*safari/)) ? _set("safari", _toFixedVersion(s[1])) : 0;  
+		  
+		  function _toFixedVersion(ver, floatLength) {  
+			ver = ('' + ver).replace(/_/g, '.');  
+			floatLength = floatLength || 1;  
+			ver = String(ver).split('.');  
+			ver = ver[0] + '.' + (ver[1] || '0');  
+			ver = Number(ver).toFixed(floatLength);  
+			return ver;  
+		  }  
+		  function _set(bname, bver) {  
+			name = bname;  
+			ver = bver;  
+		  }  
+		  return (n == 'n' ? name : (n == 'v' ? ver : name + ver));  
+		}
 	}
+	
+	/* 导出所有订单的图片并且打包为ZIP文件以及下载 */
+	function ZipDownLoad(data){
+		if( data.length>0 ){
+			/*
+			 *  定义全局参数
+			 */
+			this.index = 0;
+			this.imageArrayData = data;
+			this.zipArray = new JSZip();
+		} 
+		return false
+	}
+	
+	ZipDownLoad.prototype = {
+		start: function(type){
+			var readmeText = `文件名称以 doorHead开头为门头照片\r\n
+			  文件名称以 materiel开头为物料照片\r\n
+			  文件名称以 preConstruction开头为施工前照片\r\n
+			  文件名称以 afterConstruction开头为施工后照片\r\n
+			  文件名称以 acceptanceForm开头为验收单照片\r\n
+			  文件名称以 other开头为其它照片\r\n`;
+			this.zipArray.file("压缩包文件说明.txt", readmeText);
+			this.loopData();
+		},
+		/* 获取base64图片数据方法二 */
+		blobOrBase64: function(imgUrl, type, fn){
+			/* 在某些情况下由于http和https来跨域 */
+			var protocol = document.location.protocol;
+			var itemUrl = protocol + (imgUrl.split(":")[1]);
 
+			window.URL = window.URL || window.webkitURL;
+			var xhr = new XMLHttpRequest();
+			xhr.open("get", itemUrl, true);
+			// 至关重要
+			xhr.responseType = "blob";
+			//xhr.onreadystatechange=function(){
+			//	console.log(this)
+			//}
+			xhr.onload = function () {
+				if (this.status == 200) {
+					//得到一个blob对象
+					var blob = this.response;
+					var oFileReader = new FileReader();
+					//  至关重要
+					if(type===0){
+						oFileReader.onloadend = function (e) {
+							fn && fn(e.target.result);
+						};
+					} else if(type===1){
+						var blobData = window.URL.createObjectURL(blob);
+						fn && fn(blobData);
+					}
+					oFileReader.readAsDataURL(blob);
+				}
+			}
+			xhr.send();
+		},
+		// 循环外部数据
+		loopData: function(){
+			var _this = this;
+			if( this.imageArrayData[this.index] ){
+				/* 获得每个订单的所有图片url */
+				var imgUrlData = this.imageArrayData[this.index].url;
+				if(imgUrlData.indexOf(",")>-1){
+					/* 获得每个订单的所有图片url */
+				  var imgUrlDataItem = imgUrlData.split(",");
+				  var idx = 0;
+					/* 插入ZIP文件夹 */
+					var imgFolder = _this.zipArray.folder(imgUrlDataItem[imgUrlDataItem.length-1]);
+				  loop();
+				  // 循环内部数据
+				  function loop(){
+						/* 获得单条订单中的图片进行循环 */
+						var itemData = imgUrlDataItem[idx].split("/");
+						/* 获得每张图片的图片数据 */
+						_this.blobOrBase64(imgUrlDataItem[idx], 0, function(imgData){
+							if( imgData ){
+								imgFolder.file(itemData[itemData.length-1], imgData, {base64: true}); // {base64: true}
+								/* 内层全部循环结束后 */
+								if(imgUrlDataItem.length-2 === idx){
+									/* 执行下载 */
+									if( _this.imageArrayData.length-1 === _this.index ){
+										_this.downloadZip();
+									} else {
+										_this.index++;
+										_this.loopData();
+									} 
+									/* 继续循环内层图片数据 */
+								} else {
+									idx++;
+									loop()
+								}
+							}
+						})
+				  }
+				}
+			}
+		},
+		/* 下载ZIP 文件 */
+		downloadZip: function(){
+			this.zipArray.generateAsync({type:"blob"}).then(function(content) {
+				/*
+					* 保存下载文件
+					* 依赖js文件FileSaver.js
+					*/
+				saveAs(content, new Date().getTime()+".zip");
+			}); 
+		}
+	}
+	
 	/* 浏览器兼容性处理 */
 	if (!Object.keys) {
 		Object.keys = (function () {
@@ -687,4 +859,5 @@
 		})()
 	};
   window.DataGeneratePDF = DataGeneratePDF;
+  window.ZipDownLoad = ZipDownLoad;
 })(window, document);
