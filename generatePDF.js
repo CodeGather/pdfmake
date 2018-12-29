@@ -3,12 +3,13 @@
  * 相关链接 https://github.com/CodeGather?tab=repositories
  * 第一参数支持批量以及单条数据
  * 第二参数0为下载ZIP文件、1为PDF预览、2为PDF下载、3为PDF打印
- * 第三参数为下载文件名称支持自定义名称（以及后缀选填）（不填写默认以时间戳命名）
+ * 第三参数为下载文件是否加入清单文件，true、false
+ * 第四参数为下载文件名称支持自定义名称（以及后缀选填）（不填写默认以时间戳命名）
  * 21克的爱情 
  * 2018-10-11
  */
 !(function(window, document) {
-	/* 导出PDF 方法封装第一版 当前试用版 */
+	
 	function ImageDataGeneratePDF(data, type, name) { //urls必須是字符串或字符串數組
 		this.imgdata = new Array();
 		this.emptyobj = new Object();
@@ -16,15 +17,13 @@
 		this.data = data;
 		this.type = type;
 		this.name = name;
-		this.isShowMap = false;    // 是否显示左侧地图信息;
-		this.isShowRemarks = false;// 是否显示右侧描述信息;
-		this.BigDataArrary=[];     // 右侧数据数组;
-		this.dataList = [];        // 左侧数据数组;
-		this.zipArray = [];        // 压缩包数据数组;
+		this.isShowMap = false;        // 是否显示左侧地图信息;
+		this.isShowRemarks = false;    // 是否显示右侧描述信息;
+		this.BigDataArrary=[];         // 右侧数据数组;
+		this.dataList = [];            // 左侧数据数组;
 		this.lengthData = 0;
-		var _this = this;
-		this.config = {            // 定义左侧类型名称
-				claimCode: '品牌',
+		this.config = {                // 定义左侧类型名称
+				positionSize: '品牌',
 				serviceName: '媒体类型',
 				positionMaterial: '广告位编号',
 				customerAddress: '地理（位置）',
@@ -392,20 +391,23 @@
 		};
 		
 	}
-	
-	/* 导出PDF 方法封装第二版 当前试用版 */
-	function DataGeneratePDF(data, type, name){
+
+	function DataGeneratePDF(data, type, detailed, name){
 		this.data = data;
 		this.type = type;
+    this.detail = detailed || false;
 		this.name = name;
 		this.isShowMap = false;    // 是否显示左侧地图信息;
 		this.isShowRemarks = false;// 是否显示右侧描述信息;
 		this.BigDataArrary=[];     // 右侧数据数组;
 		this.dataList = [];        // 左侧数据数组;
 		this.zipArray = [];        // 压缩包数据数组;
+		this.catalogArray = [];    // 目录数据数组;
+    this.catalogTempArray = [];
+    this.catalogConfigArray = ['序号','城市','点位名称','媒体类型','媒体编号','发布日期']
 		this.lengthData = 0;
 		this.config = {            // 定义左侧类型名称
-			claimCode: '品牌',
+			positionSize: '品牌',
 			serviceName: '媒体类型',
 			positionMaterial: '广告位编号',
 			customerAddress: '地理（位置）',
@@ -413,7 +415,7 @@
 			positionName: '点位名称',
 			cityName: '城市',
 			//expectStarTime: '上刊监测日期',
-		}
+		};
 		this.objArray = Object.keys(this.config);
 		this.option = {
 			pageSize: 'A4',                 // 默认情况下我们使用portrait或者自定义
@@ -423,6 +425,13 @@
 				alignment: 'right',
 				columnGap: 20
 			},
+      styles: {
+        tableHeader: {
+          bold: true,
+          fontSize: 13,
+          color: 'black'
+        }
+      },
 			footer: {   // 底部logo图片信息
 				columns: [{
 					image: 'logo-left.png',
@@ -444,7 +453,8 @@
 					margin: [40, -40, 0, 0]
 				}]
 			}
-		}
+		};
+    this.catalogOption = this.option;
 		pdfMake.fonts = {
 			Roboto: {
 				normal: 'simfang.ttf',
@@ -458,11 +468,36 @@
 	DataGeneratePDF.prototype = {
 		/* 初始化开始 */
 		start:function(){
-			var _this = this;
+      var _this = this;
+      var msg = _this.data.length>1?'数据装载成功，当前正在导出'+_this.data.length+"条数据！":"PDF生成成功，正在为您下载中...";
+      app.msg(msg, 6000, null); 
+
+      if(_this.data.length>20){
+        $(".container-fluid").addClass("box");
+        $(".overlay").show();
+      }
+      
+      if(_this.detail){
+        /* 初始化表格头部数据 */
+        let catalogTemp = [];
+        _this.catalogConfigArray.forEach(function(e,i){
+          catalogTemp.push({
+            text: e, 
+            style: 'tableHeader'
+          })
+        })
+        _this.catalogTempArray.push(catalogTemp);
+      }
+
 			// 循环需要生成PDF的数据每一条为一页PDF
 			for(var m=0;m<_this.data.length;m++){
-				// 左侧数据组合
-				_this.dataList[m] = [];
+        if(_this.detail){
+         	// 插入清单信息
+          _this.catalogTempArray.push([ (m+1), _this.data[m].cityName, _this.data[m].positionName, _this.data[m].serviceName, _this.data[m].positionMaterial, (app.format_time_stamp("yyyy.MM.dd",_this.data[m].activityStartTime) + "-" + app.format_time_stamp("MM.dd",_this.data[m].activityCompleteTime))])
+        }
+				
+        // 左侧数据组合
+        _this.dataList[m] = [];
 				_this.objArray.forEach(function(e,i){
 					var colorCode = _this.dataList[m].length%2===1?'#dddddd':'#ffffff';
 					_this.dataList[m].push([{
@@ -470,7 +505,7 @@
 						text: _this.config[e],
 						margin: [5, 5]
 					},{
-						text: e=='expectStarTime'?app.format_time_stamp("yyyy-MM-dd",_this.data[m].expectStartTime) + " <-------> " + app.format_time_stamp("yyyy-MM-dd",_this.data[m].expectCompleteTime) :(_this.data[m][e] || ''),
+						text: e=='expectStarTime'?app.format_time_stamp("yyyy-MM-dd",_this.data[m].activityStartTime) + " <-------> " + app.format_time_stamp("yyyy-MM-dd",_this.data[m].activityCompleteTime) :(_this.data[m][e] || ''),
 						fillColor: colorCode,
 						margin: [5, 5],
 					}]);
@@ -494,7 +529,7 @@
 				
 				/* PDF页面的第一个对象 */
 				var objData = {
-					text: _this.data[m].claimCode, //'广告位信息',
+					text: _this.data[m].projectName, //'广告位信息',
 					fontSize: 26,
 					bold: true,
 					alignment: 'left',
@@ -559,7 +594,7 @@
 				var dataItem = _this.data[_this.lengthData].attachmentCover.slice(0,-1).split(',');
 				function loopData(){
 					if( dataItem[idx] ){
-						_this.blobOrBase64(dataItem[idx], 0, function(imgData){
+						_this.getUrlToBaseData(dataItem[idx], 0, function(imgData){
 							if( imgData ){
 								if( arrayDataImg.length < 2 ){  // 判断左右两边是否为数组否则创建并插入columns参数
 									arrayDataImg.push({
@@ -593,13 +628,15 @@
 									if(_this.BigDataArrary[_this.lengthData*2+1]){
 										_this.BigDataArrary[_this.lengthData*2+1].columns[0].columns.push(arrayDataImg);
 									}
+                  $(".press").html(((_this.lengthData/(_this.data.length-1))*100).toFixed(2)+"%");
 									if(_this.lengthData===_this.data.length-1){
 										console.log("所有数据加载完毕");
 										_this.lengthData = 0;
 										/* 所有数据处理完毕后进行content的数据插入 */
 										_this.option.content = _this.BigDataArrary;
+
 										/* 处理最后一张品牌logo */
-										_this.blobOrBase64(_this.data[_this.lengthData].attachmentFile, 0, function( HeadImgData ){
+										_this.getUrlToBaseData(_this.data[_this.lengthData].attachmentFile, 0, function( HeadImgData ){
 											/* 判断数据是否存在 */
 											if( HeadImgData ){
 												var headData={
@@ -609,7 +646,6 @@
 													margin: [ 30, 20, 0, 0 ]
 												}
 												_this.option.header = headData;
-
 												/* 所有数据处理完毕后交给下一个方法继续处理 */
 												_this.doneData(_this.option);
 											}
@@ -642,7 +678,7 @@
 				// 至关重要
 			xhr.responseType = "blob";
 			//xhr.onreadystatechange=function(){
-			//	console.log(this)
+				//console.log(this)
 			//}
 			xhr.onload = function () {
 				if (this.status == 200) {
@@ -663,26 +699,109 @@
 			}
 			xhr.send();
 		},
+    /* 获取base64图片数据方法一 */
+		getUrlToBaseData: function (url, type, fn) {
+			var c = document.createElement("canvas");
+			var ctx = c.getContext("2d");
+			var img = new Image();
+      var _this = this;
+			
+			var protocol = document.location.protocol;
+			var itemUrl = protocol+url.split(":")[1];
+			
+			img.src = itemUrl;
+			img.crossOrigin = "*";
+			img.onload = function (e) {
+				var maxwidth, canvasScale = 1, imageScale = 1;
+        if( _this.data.length>1 ){
+          maxwidth = 550;
+          imageScale = 0.6;
+        } else {
+          maxwidth = 850;
+        }
+
+				if (img.width > maxwidth) {
+					canvasScale = maxwidth / img.width;
+					c.width = maxwidth;
+					c.height = Math.floor(img.height * canvasScale);
+				} else {
+					c.width = img.width;
+					c.height = img.height;
+				}
+				ctx.drawImage(img, 0, 0, c.width, c.height);
+				fn && fn(c.toDataURL('image/jpeg', imageScale));
+			};
+			img.onerror = function () {
+				
+			};
+		},
 		/* 所有数据加载完毕后处理方法 */
 		doneData: function(optionData){
 			var _this = this;
+      if($(".container-fluid").hasClass("box")){
+        $(".overlay").hide();
+        $(".container-fluid").removeClass("box")
+      }
 			if(optionData){
 				if(_this.type===0){        // 下载ZIP文件
-					_this.downloadZip();
+          zipArray = new JSZip();   // 压缩包数据数组;
 					pdfMake.createPdf(_this.option).getBlob(function(req){
-						_this.zipArray.file( new Date().getTime() + '.pdf', req );
-						_this.downloadZip();
+						zipArray.file( _this.format_time_stamp("yyyy年MM月dd日hh时mm分ss秒") + '.pdf', req );
+            
+            if(_this.detail){
+              /* 添加清单信息数据 */
+              _this.catalogArray.push({
+                  layout: 'headerLineOnly',
+                  alignment: 'left',
+                  margin: [15, 50, 15, 30],
+                  color: '#222',
+                  table: {
+                    widths: ['auto', 'auto', '*', '*', '*', 'auto'],
+                    body: _this.catalogTempArray
+                  }
+              })
+              _this.catalogOption.content = _this.catalogArray;
+              console.log(_this.catalogOption)
+              /* 生成清单信息数据 */
+              pdfMake.createPdf(_this.catalogOption).getBlob(function(req){
+                zipArray.file( _this.format_time_stamp("yyyy年MM月dd日hh时mm分ss秒") + '清单信息.pdf', req );
+                _this.downloadZip(zipArray);
+              });
+            } else {
+              _this.downloadZip(zipArray);
+            }
 					});
 				} else if(_this.type===1){ // 预览
 					pdfMake.createPdf(_this.option).open();
 				} else if(_this.type===2){ // 下载
-					var pdfName = _this.name? _this.name : new Date().getTime()+'.pdf';
+					var pdfName = _this.name? _this.name : _this.format_time_stamp("yyyy年MM月dd日hh时mm分ss秒")+'.pdf';
 					pdfMake.createPdf(_this.option).download(pdfName);
 				} else if(_this.type===3){ // 打印
 					pdfMake.createPdf(_this.option).print();
 				}
 			}
 		},
+		/* 下载ZIP 文件 */
+		downloadZip: function(data){
+      var _this = this;
+			data.generateAsync({type:"blob"}).then(function(content) {
+				/*
+					* 保存下载文件
+					* 依赖js文件FileSaver.js
+					*/
+				saveAs(content, _this.format_time_stamp("yy年MM月dd日hh时mm分ss秒")+".zip");
+			}); 
+		},
+    /* 格式化时间戳，第二参数不传默认为当前时间 */
+    format_time_stamp: function(format,timestamp){
+    	var newDate = new Date();
+      var timeType = timestamp || new Date().getTime();
+      if(isNaN(timeType)){
+        timeType = new Date(timestamp.replace(/-/g,'/')).getTime();
+      }
+    	newDate.setTime(timeType);
+    	return newDate.format(format);
+    },
 		/* 获取浏览器信息 */
 		getBrowserMessage: function(n) { 
 			/* 
@@ -713,117 +832,7 @@
 		  return (n == 'n' ? name : (n == 'v' ? ver : name + ver));  
 		}
 	}
-	
-	/* 导出所有订单的图片并且打包为ZIP文件以及下载 */
-	function ZipDownLoad(data){
-		if( data.length>0 ){
-			/*
-			 *  定义全局参数
-			 */
-			this.index = 0;
-			this.imageArrayData = data;
-			this.zipArray = new JSZip();
-		} 
-		return false
-	}
-	
-	ZipDownLoad.prototype = {
-		start: function(type){
-			var readmeText = `文件名称以 doorHead开头为门头照片\r\n
-			  文件名称以 materiel开头为物料照片\r\n
-			  文件名称以 preConstruction开头为施工前照片\r\n
-			  文件名称以 afterConstruction开头为施工后照片\r\n
-			  文件名称以 acceptanceForm开头为验收单照片\r\n
-			  文件名称以 other开头为其它照片\r\n`;
-			this.zipArray.file("压缩包文件说明.txt", readmeText);
-			this.loopData();
-		},
-		/* 获取base64图片数据方法二 */
-		blobOrBase64: function(imgUrl, type, fn){
-			/* 在某些情况下由于http和https来跨域 */
-			var protocol = document.location.protocol;
-			var itemUrl = protocol + (imgUrl.split(":")[1]);
 
-			window.URL = window.URL || window.webkitURL;
-			var xhr = new XMLHttpRequest();
-			xhr.open("get", itemUrl, true);
-			// 至关重要
-			xhr.responseType = "blob";
-			//xhr.onreadystatechange=function(){
-			//	console.log(this)
-			//}
-			xhr.onload = function () {
-				if (this.status == 200) {
-					//得到一个blob对象
-					var blob = this.response;
-					var oFileReader = new FileReader();
-					//  至关重要
-					if(type===0){
-						oFileReader.onloadend = function (e) {
-							fn && fn(e.target.result);
-						};
-					} else if(type===1){
-						var blobData = window.URL.createObjectURL(blob);
-						fn && fn(blobData);
-					}
-					oFileReader.readAsDataURL(blob);
-				}
-			}
-			xhr.send();
-		},
-		// 循环外部数据
-		loopData: function(){
-			var _this = this;
-			if( this.imageArrayData[this.index] ){
-				/* 获得每个订单的所有图片url */
-				var imgUrlData = this.imageArrayData[this.index].url;
-				if(imgUrlData.indexOf(",")>-1){
-					/* 获得每个订单的所有图片url */
-				  var imgUrlDataItem = imgUrlData.split(",");
-				  var idx = 0;
-					/* 插入ZIP文件夹 */
-					var imgFolder = _this.zipArray.folder(imgUrlDataItem[imgUrlDataItem.length-1]);
-				  loop();
-				  // 循环内部数据
-				  function loop(){
-						/* 获得单条订单中的图片进行循环 */
-						var itemData = imgUrlDataItem[idx].split("/");
-						/* 获得每张图片的图片数据 */
-						_this.blobOrBase64(imgUrlDataItem[idx], 0, function(imgData){
-							if( imgData ){
-								imgFolder.file(itemData[itemData.length-1], imgData, {base64: true}); // {base64: true}
-								/* 内层全部循环结束后 */
-								if(imgUrlDataItem.length-2 === idx){
-									/* 执行下载 */
-									if( _this.imageArrayData.length-1 === _this.index ){
-										_this.downloadZip();
-									} else {
-										_this.index++;
-										_this.loopData();
-									} 
-									/* 继续循环内层图片数据 */
-								} else {
-									idx++;
-									loop()
-								}
-							}
-						})
-				  }
-				}
-			}
-		},
-		/* 下载ZIP 文件 */
-		downloadZip: function(){
-			this.zipArray.generateAsync({type:"blob"}).then(function(content) {
-				/*
-					* 保存下载文件
-					* 依赖js文件FileSaver.js
-					*/
-				saveAs(content, new Date().getTime()+".zip");
-			}); 
-		}
-	}
-	
 	/* 浏览器兼容性处理 */
 	if (!Object.keys) {
 		Object.keys = (function () {
@@ -858,6 +867,32 @@
 			}
 		})()
 	};
+  
+  /* 时间格式化 */
+  if(!Date.prototype.format){
+    Date.prototype.format = function(fmt){ //author: meizz
+      var o = {
+        "M+" : this.getMonth()+1,                 //月份
+        "d+" : this.getDate(),                    //日
+        "h+" : this.getHours(),                   //小时
+        "m+" : this.getMinutes(),                 //分
+        "s+" : this.getSeconds(),                 //秒
+        "q+" : Math.floor((this.getMonth()+3)/3), //季度
+        "S"  : this.getMilliseconds(),            //毫秒
+        "I"  : function(){                        //时段
+          var a = this.getHours();
+          if(0<=a && a<6)return '凌晨';
+          if(6<=a && a<18)return '白天';
+          if(18<=a && a<24)return '夜晚';
+        }.bind(this)
+      };
+      if(/(y+)/.test(fmt))
+        fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+      for(var k in o)
+        if(new RegExp("("+ k +")").test(fmt))
+      fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+      return fmt;
+    }
+  }
   window.DataGeneratePDF = DataGeneratePDF;
-  window.ZipDownLoad = ZipDownLoad;
 })(window, document);
